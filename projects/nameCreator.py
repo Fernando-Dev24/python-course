@@ -1,0 +1,1 @@
+print("La cerveza se llama \n " + input("¿Dónde naciste? ") + " " + input("¿Cómo se llama tu mascota? "))
