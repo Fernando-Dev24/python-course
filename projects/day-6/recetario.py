@@ -88,6 +88,55 @@ def read_recipe(directory_root, category, recipe_name):
 
    return
 
+# Function Menu 2: Create a new recipe with name and content
+def create_recipe(directory_root, category):
+   system('cls')
+   new_recipe_name = input("Escibre el nombre de la nueva receta: ")
+
+   while ( Path(directory_root / category / f"{ new_recipe_name }.txt").exists() == True ):
+      new_recipe_name = input("Ya existe una receta con ese nombre, intenta con uno diferente: ")
+
+   new_recipe_content = input("Escribe el contenido de la nueva receta: ")
+
+   # First, we need to create the file with the name provided by the user
+   new_file = open(Path(directory_root / category / f"{ new_recipe_name }.txt"), 'x')
+   new_file.close()
+
+   # Finally, we need just to open the file with write mode and write the content user provided
+   new_file = open(Path(directory_root / category / f"{ new_recipe_name }.txt"), 'w')
+   new_file.write(new_recipe_content)
+   new_file.close()
+   
+   # Validate if the new file was created successfully
+   if ( Path(directory_root / category / f"{ new_recipe_name }.txt").exists() == False ):
+      input("Ha ocurrido un error, presiona Enter para volver a intentarlo: ")
+      return
+   
+   input("La receta se ha creado correctamente, presiona Enter para volver al menu principal: ")
+   
+   return
+
+# Function Menu 3: Create a new category without any recipe inside, i mean, just the folder
+def create_category(directory_root):
+   system('cls')
+   new_directory_name = input("Escribe el nombre de la nueva categoria: ")
+
+   while ( new_directory_name == '' ):
+      new_directory_name = input("Escribe el nombre de la nueva categoria: ")
+
+   # Create the new empty folder with the name that user provided
+   os.makedirs(Path(directory_root / new_directory_name))
+
+   if ( Path(directory_root / new_directory_name).exists() == False ):
+      input("Ha ocurrido un error, presiona Enter para volver a intentalo: ")
+      return
+   
+   system('cls')
+   print(f"Se ha creado la nueva categoría, su ruta es: { Path(directory_root / new_directory_name) }")
+   input("Presiona Enter para volver al menu principal: ")
+
+   return
+
 # Functions Menu 4: Delete a recipe
 def delete_recipe(directory_root, category, recipe_name):
    system('cls')
@@ -116,9 +165,19 @@ match user_selection:
       system('cls')
       show_menu(user_selection)
    case 2:
-      print("Hola mundo 2")
+      system('cls')
+      print(f"Elegiste la opcion { user_selection }. Crear una receta en una categoria existente \n")
+      print("Escoge una categoria segun el numero de la par: ")
+      category_selection = choose_category(directory_root)
+      create_recipe(directory_root, category_selection)
+      system('cls')
+      show_menu(user_selection)
    case 3:
-      print("Hola Mundo 3")
+      system('cls')
+      print(f"Elegiste la opcion { user_selection }. Crear una nueva categoria \n")
+      create_category(directory_root)
+      system('cls')
+      show_menu(user_selection)
    case 4:
       system('cls')
       print(f"Elegiste la opcion { user_selection }. Eliminar una receta \n")
