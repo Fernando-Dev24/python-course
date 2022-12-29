@@ -1,0 +1,3 @@
+# El repositorio de PyPi es el repositorio de paquetes de terceros que completan diferentes tareas de una forma sencilla puesto que muchas de las funcionalidades estan creadas. Solo hace falta dos cosas: Encontrarlo, Instalarlo, e Importarlo en el proyecto que queramos trabajar.
+
+# Para ello usamos el comando pip install [nombre_del_paquete]. De esta forma ya lo tenemos disponible en nuestro proyecto para usarlo en el proyecto en cuestion.
