@@ -43,13 +43,13 @@ def show_menu(user_selection):
 # Function to select a category
 def choose_category(directory_root):   
    categories = os.listdir(directory_root)
-   categorie_selection = ''
+   categorie_selection = len(categories) + 1
    
    for categorie in categories:
       print(f"{ categories.index(categorie) + 1 }. { categorie }")
    
-   while ( categorie_selection not in ['1', '2', '3', '4'] ):
-      categorie_selection = input("Digite el numero de la categoria: ")
+   while ( categorie_selection > len(categories) ):
+      categorie_selection = int(input("Digite el numero de la categoria: "))
    
    return categories[int(categorie_selection) - 1]
 
@@ -67,6 +67,11 @@ def choose_receipt(directory_root, category_selection):
    # Show the list of receipts in the subfolder that has the same name as the user chose
    for name in names:
       print(f"{ names.index(name) + 1 }. { name }")
+
+   if ( len(names) == 0 ):
+      print("No hay recetas en esta categoria, te recomendamos que crees una nueva en esta categoria.")
+      input("Presiona Enter para volver al menu principal: ")
+      return
 
    # Ask the user to enter the correct name of the recipe
    user_recipe = ''
@@ -119,6 +124,7 @@ def create_recipe(directory_root, category):
 # Function Menu 3: Create a new category without any recipe inside, i mean, just the folder
 def create_category(directory_root):
    system('cls')
+   print(f"Elegiste la opcion { user_selection }. Crear una nueva categoria \n")
    new_directory_name = input("Escribe el nombre de la nueva categoria: ")
 
    while ( new_directory_name == '' ):
@@ -149,48 +155,76 @@ def delete_recipe(directory_root, category, recipe_name):
 
    return
 
+# Function Menu 5: Delete a category
+def delete_category(directory_root, category):
+   # To remove a completed directory, first we need to remove all files contained in that specific path
+   route = Path(directory_root / category)
+   
+   # Loop on every file inside the route variable
+   for file in os.listdir(route):
+      print(f"Eliminando archivo: { file }")
+      os.remove(Path(route / file))
+   
+   print(f"Todos los archivos de la categoria { category } han sido eliminados.")
+   print(f"Eliminando categoria: { category }")
+
+   # Now that directory is empty, we're allowed to remove the directory
+   os.rmdir(route)
+
+   input(f"Categoria { category } eliminada correctamente. Presione Enter para volver al menu principal: ")
+
+   return
+
 # Execute functions
 greet_user(username, directory_root, receipts_names)
 user_selection = show_menu(user_selection)
 
 # Loop while to show menu to user unless user decide to end algorithm
-match user_selection:
-   case 1:
-      system('cls')
-      print(f"Elegiste la opcion { user_selection }. Leer una receta \n")
-      print("Escoge una categoria segun el numero de la par: ")
-      category_selection = choose_category(directory_root)
-      user_recipe = choose_receipt(directory_root, category_selection)
-      read_recipe(directory_root, category_selection, user_recipe)
-      system('cls')
-      show_menu(user_selection)
-   case 2:
-      system('cls')
-      print(f"Elegiste la opcion { user_selection }. Crear una receta en una categoria existente \n")
-      print("Escoge una categoria segun el numero de la par: ")
-      category_selection = choose_category(directory_root)
-      create_recipe(directory_root, category_selection)
-      system('cls')
-      show_menu(user_selection)
-   case 3:
-      system('cls')
-      print(f"Elegiste la opcion { user_selection }. Crear una nueva categoria \n")
-      create_category(directory_root)
-      system('cls')
-      show_menu(user_selection)
-   case 4:
-      system('cls')
-      print(f"Elegiste la opcion { user_selection }. Eliminar una receta \n")
-      print("Escoge una categoria segun el numero de la par: ")
-      category_selection = choose_category(directory_root)
-      user_recipe = choose_receipt(directory_root, category_selection)
-      delete_recipe(directory_root, category_selection, user_recipe)
-      system('cls')
-      show_menu(user_selection)
-   case 5:
-      print("Hola Mundo 5")
-
-""" while ( user_selection != 6 ):
+while ( user_selection != 6 or user_selection == None ):
+   match user_selection:
+      case 1:
+         system('cls')
+         print(f"Elegiste la opcion { user_selection }. Leer una receta \n")
+         print("Escoge una categoria segun el numero de la par: ")
+         category_selection = choose_category(directory_root)
+         user_recipe = choose_receipt(directory_root, category_selection)
+         if ( user_recipe == None ):
+            system('cls')
+            user_selection = show_menu(user_selection)
+         else:
+            read_recipe(directory_root, category_selection, user_recipe)
+            system('cls')
+            user_selection = show_menu(user_selection)
+      case 2:
+         system('cls')
+         print(f"Elegiste la opcion { user_selection }. Crear una receta en una categoria existente \n")
+         print("Escoge una categoria segun el numero de la par: ")
+         category_selection = choose_category(directory_root)
+         create_recipe(directory_root, category_selection)
+         system('cls')
+         user_selection = show_menu(user_selection)
+      case 3:
+         system('cls')
+         create_category(directory_root)
+         system('cls')
+         user_selection = show_menu(user_selection)
+      case 4:
+         system('cls')
+         print(f"Elegiste la opcion { user_selection }. Eliminar una receta \n")
+         print("Escoge una categoria segun el numero de la par: ")
+         category_selection = choose_category(directory_root)
+         user_recipe = choose_receipt(directory_root, category_selection)
+         delete_recipe(directory_root, category_selection, user_recipe)
+         system('cls')
+         user_selection = show_menu(user_selection)
+      case 5:
+         system('cls')
+         print(f"Elegiste la opcion { user_selection }. Eliminar una categoria. \n")
+         print("Ten en cuenta que para eliminar una categoria todas las recetas de esa categoria seran eliminadas")
+         print("Escoge una categoria segun el numero de la par: ")
+         category_selection = choose_category(directory_root)
+         delete_category(directory_root, category_selection)
+         system('cls')
+         user_selection = show_menu(user_selection)
 else:
-   print("\n¡Nos vemos luego!") """
-   
+   print("\n¡Nos vemos luego!")
