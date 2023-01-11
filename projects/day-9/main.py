@@ -49,14 +49,26 @@ def get_serial_numbers(pattern):
 def output_function(date, serial_numbers, started_time):
    # Clear console
    os.system('cls')
-   print("-"*30)
+   print("-"*52)
 
    # Show today date
    print(f"Fecha de búsqueda: { date } \n")
+   print('''ARCHIVO \t NRO. SERIE''')
+   print("------- \t ----------")
 
    # Show serial numbers: file - serial number
    for file_name, number in serial_numbers:
-      print(file_name, number)
+      print(f"{ file_name } \t { number }")
+
+   # Show how many files contains a serial number and the exact time code expend on finish task
+   print("\n")
+   print(f"Números encontrados: { len(serial_numbers) }")
+   
+   end_time = time.time()
+   print(f"Duración de la búsqueda: { math.ceil( end_time - started_time ) } segundos \n")
+
+   input("Presiona cualquier tecla para continuar: ")
+   return
 
 serial_numbers, started_time = get_serial_numbers(pattern)
 output_function(date, serial_numbers, started_time)
